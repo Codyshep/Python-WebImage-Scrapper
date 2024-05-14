@@ -62,7 +62,12 @@ def download_images_with_browser(url, download_folder, keyword=''):
         # Set to store processed image URLs
         processed_urls = set()
 
-        while True:
+        # Flag to track if new images have been downloaded
+        new_images_downloaded = True
+
+        while new_images_downloaded:
+            new_images_downloaded = False  # Reset the flag at the beginning of each iteration
+
             # Scroll down to the bottom of the page
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
@@ -97,12 +102,15 @@ def download_images_with_browser(url, download_folder, keyword=''):
                     # Download the image using requests
                     download_image(img_url, download_folder, img_filename)
                     img_count += 1
+                    new_images_downloaded = True  # Set the flag to True if a new image is downloaded
 
             # Scroll down further if not all images have been downloaded
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
             # Wait for a short period before continuing
             time.sleep(1)
+
+        print("All images have been downloaded.")
 
     finally:
         # Close the browser
